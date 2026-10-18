@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sistema nervioso somático · Expo-Sistemas</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+:root{--bg:#F3F6F8;--ink:#14263A;--mut:#51647A;--card:#FFFFFF;--line:#D3DCE5;--nerve:#0B7285;--on:#FFFFFF;--pulse:#E8A33D;--muscle:#B3443B;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F1A26;--ink:#E6EDF4;--mut:#9DB0C3;--card:#172635;--line:#2A3E52;--nerve:#4FC1D3;--on:#0F1A26;--pulse:#F2B450;--muscle:#E27A70;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0F1A26;--ink:#E6EDF4;--mut:#9DB0C3;--card:#172635;--line:#2A3E52;--nerve:#4FC1D3;--on:#0F1A26;--pulse:#F2B450;--muscle:#E27A70;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.65 'Source Serif 4',Georgia,serif}
+h1,h2,h3,.sans{font-family:'Bricolage Grotesque',system-ui,-apple-system,'Segoe UI',sans-serif}
+.wrap{max-width:900px;margin:0 auto;padding:0 20px}
+.burger{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));left:12px;z-index:60;width:46px;height:46px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:5px;background:var(--card);border:1px solid var(--line);border-radius:10px;cursor:pointer;padding:0}
+.burger span{display:block;width:22px;height:2.5px;border-radius:2px;background:var(--ink);transition:transform .2s,opacity .2s}
+.burger[aria-expanded="true"] span:nth-child(1){transform:translateY(7.5px) rotate(45deg)}
+.burger[aria-expanded="true"] span:nth-child(2){opacity:0}
+.burger[aria-expanded="true"] span:nth-child(3){transform:translateY(-7.5px) rotate(-45deg)}
+.drawer{position:fixed;top:0;bottom:0;left:0;z-index:50;width:min(300px,82vw);background:var(--card);border-right:1px solid var(--line);padding:calc(76px + env(safe-area-inset-top,0px)) 14px 24px;overflow-y:auto;transform:translateX(-100%);visibility:hidden;transition:transform .25s ease,visibility .25s}
+.drawer.open{transform:none;visibility:visible}
+.drawer p{margin:0 10px 10px;font:700 18px 'Bricolage Grotesque',system-ui,sans-serif}
+.drawer a{display:block;padding:12px 10px;border-radius:8px;color:var(--ink);text-decoration:none;font:500 17px 'Bricolage Grotesque',system-ui,sans-serif}
+.drawer a:hover{background:var(--bg);color:var(--nerve)}
+.scrim{position:fixed;inset:0;z-index:40;background:rgba(10,20,30,.45);opacity:0;pointer-events:none;transition:opacity .25s}
+.scrim.open{opacity:1;pointer-events:auto}
+@media (prefers-reduced-motion:reduce){.drawer,.scrim,.burger span{transition:none}}
+
+:focus-visible{outline:3px solid var(--pulse);outline-offset:3px}
+.hero{padding:76px 0 36px}
+h1{font-size:clamp(34px,6vw,58px);line-height:1.05;margin:0 0 14px;letter-spacing:-.02em}
+.lead{font-size:clamp(19px,2.4vw,22px);color:var(--mut);max-width:34em;margin:0}
+.path{position:relative;display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin:36px 0 0}
+.path::before{content:"";position:absolute;left:8%;right:8%;top:22px;height:3px;background:var(--line)}
+.path::after{content:"";position:absolute;top:15px;left:8%;width:16px;height:16px;border-radius:50%;background:var(--pulse);animation:run 3.2s ease-in-out 1 forwards}
+@keyframes run{to{left:calc(92% - 16px)}}
+.path button{position:relative;z-index:1;background:none;border:0;font:inherit;color:var(--ink);cursor:pointer;text-align:center;padding:0 2px}
+.dot{display:grid;place-items:center;width:44px;height:44px;margin:0 auto 8px;border-radius:50%;background:var(--card);border:3px solid var(--nerve);font:700 17px 'Bricolage Grotesque',system-ui,sans-serif}
+.path button[aria-pressed="true"] .dot{background:var(--nerve);color:var(--on)}
+.path small{display:block;font:500 13px/1.25 'Bricolage Grotesque',system-ui,sans-serif}
+.detail{margin-top:22px;padding:18px 22px;background:var(--card);border-left:5px solid var(--nerve);border-radius:0 8px 8px 0}
+.detail h3{margin:0 0 6px;font-size:20px}.detail p{margin:0}
+@media (max-width:640px){.path{grid-template-columns:repeat(3,1fr);row-gap:18px}.path::before,.path::after{display:none}}
+@media (prefers-reduced-motion:reduce){.path::after{display:none}html{scroll-behavior:auto}}
+section{padding:40px 0;border-top:1px solid var(--line)}
+h2{font-size:clamp(26px,4vw,34px);margin:0 0 14px;letter-spacing:-.01em}
+h3{font-size:20px;margin:26px 0 6px}
+p,li{max-width:68ch}
+ul,ol{padding-left:22px}li{margin:6px 0}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px;margin-top:14px}
+.box{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
+.box h3{margin-top:0}
+.box.m{border-top:4px solid var(--muscle)}.box.s{border-top:4px solid var(--nerve)}
+.scroll{overflow-x:auto;margin-top:12px}
+table{width:100%;min-width:540px;border-collapse:collapse;font-size:16px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:700 15px 'Bricolage Grotesque',system-ui,sans-serif;color:var(--nerve)}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0}
+.chip{font:500 16px 'Bricolage Grotesque',system-ui,sans-serif;padding:10px 16px;border-radius:999px;border:2px solid var(--nerve);background:var(--card);color:var(--ink);cursor:pointer}
+.chip.ok{background:var(--nerve);color:var(--on);cursor:default}
+.chip.bad{border-color:var(--muscle);animation:nope .35s}
+@keyframes nope{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.btn{display:inline-block;padding:12px 22px;border-radius:8px;background:var(--nerve);color:var(--on);font:700 16px 'Bricolage Grotesque',system-ui,sans-serif;text-decoration:none;border:0;cursor:pointer}
+.btn.alt{background:none;color:var(--nerve);border:2px solid var(--nerve)}
+.btn[aria-disabled="true"]{opacity:.55;pointer-events:none}
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+#msg{font:500 16px 'Bricolage Grotesque',system-ui,sans-serif;color:var(--mut);min-height:1.6em}
+footer{padding:30px 0 40px;border-top:1px solid var(--line);color:var(--mut);font-size:15px}
+footer p{margin:6px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+<button class="burger" id="burger" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="menu"><span></span><span></span><span></span></button>
+<nav class="drawer" id="menu" aria-label="Secciones"><p>Contenido</p><a href="#que-es">Qué es</a><a href="#motora">Vía motora</a><a href="#sensitiva">Vía sensitiva</a><a href="#comparacion">Somático y autónomo</a><a href="#clinica">Clínica</a><a href="#juego">Juego</a><a href="#evaluacion">Evaluación</a></nav>
+<div class="scrim" id="scrim"></div>
+
+<header class="hero">
+<h1>Sistema nervioso somático</h1>
+<p class="lead">Cómo una decisión de la corteza cerebral se convierte en movimiento, y cómo el cuerpo informa lo que siente.</p>
+<div class="path" id="path" role="group" aria-label="Etapas de la vía motora voluntaria"></div>
+<div class="detail" id="det" aria-live="polite"></div>
+</header>
+
+<section id="que-es">
+<h2>Qué es y qué hace</h2>
+<p>El sistema nervioso somático es la parte del sistema nervioso periférico que conecta el sistema nervioso central (SNC) con la piel, los músculos esqueléticos y las articulaciones. Cumple dos funciones: llevar al SNC información sensitiva consciente (tacto, dolor, temperatura, posición del cuerpo) y conducir las órdenes motoras voluntarias hacia el músculo esquelético.</p>
+<div class="cols">
+<div class="box s"><h3>Componente sensitivo (aferente)</h3><p>Neuronas seudounipolares con el soma en los ganglios de la raíz dorsal. Sus receptores detectan estímulos de la piel, los músculos y las articulaciones.</p></div>
+<div class="box m"><h3>Componente motor (eferente)</h3><p>Las motoneuronas superiores nacen en la corteza motora; las inferiores están en el asta anterior de la médula y en el tronco encefálico, y se conectan con el músculo.</p></div>
+</div>
+<h3>Piezas clave</h3>
+<ul>
+<li><b>Motoneurona alfa (α):</b> inerva las fibras musculares extrafusales y genera la fuerza de la contracción.</li>
+<li><b>Motoneurona gamma (γ):</b> inerva las fibras intrafusales del huso muscular y ajusta su sensibilidad al estiramiento.</li>
+<li><b>Unidad motora:</b> una motoneurona α y todas las fibras que inerva. En los músculos oculares son pocas fibras (movimientos finos); en los grandes músculos de la pierna son cientos o más de mil (fuerza).</li>
+<li><b>Nervios:</b> 31 pares espinales (8 cervicales, 12 torácicos, 5 lumbares, 5 sacros y 1 coccígeo) y pares craneales con componente somático, como el III, IV y VI (movimientos del ojo) y el XII (lengua).</li>
+</ul>
+</section>
+
+<section id="motora">
+<h2>Vía motora voluntaria</h2>
+<p>Toca las seis etapas de arriba para recorrerla. La orden nace en la corteza motora (giro precentral), que se organiza como un mapa del cuerpo: las manos y la cara ocupan mucha más superficie que el tronco porque requieren movimientos más precisos.</p>
+<p>Alrededor del 85–90 % de los axones del tracto corticoespinal cruza en la decusación piramidal del bulbo raquídeo. Por eso el hemisferio izquierdo controla el lado derecho del cuerpo, y una lesión en un hemisferio afecta al lado opuesto.</p>
+<h3>Ejemplo: el reflejo rotuliano</h3>
+<p>Un reflejo es una respuesta rápida que no necesita pasar por el cerebro. Sirve para proteger y mantener la postura.</p>
+<ol>
+<li>El martillo estira el tendón y, con él, el cuádriceps. Se activa el huso muscular.</li>
+<li>La neurona aferente Ia entra a la médula por la raíz dorsal (segmentos L2–L4).</li>
+<li>Hace sinapsis directa con la motoneurona α del asta anterior (reflejo monosináptico).</li>
+<li>El cuádriceps se contrae y la rodilla se extiende.</li>
+<li>Al mismo tiempo, una interneurona inhibe a los isquiotibiales (inhibición recíproca) para que no se opongan al movimiento.</li>
+</ol>
+</section>
+
+<section id="sensitiva">
+<h2>Vía sensitiva</h2>
+<p>Los receptores somáticos se clasifican por el estímulo que detectan:</p>
+<ul>
+<li><b>Mecanorreceptores:</b> tacto, presión y vibración.</li>
+<li><b>Termorreceptores:</b> frío y calor.</li>
+<li><b>Nociceptores:</b> dolor.</li>
+<li><b>Propioceptores:</b> posición y movimiento del cuerpo (huso muscular y órgano tendinoso de Golgi).</li>
+</ul>
+<p>La información sube por dos grandes vías. Las columnas dorsales llevan tacto fino, vibración y propiocepción consciente, y cruzan en el bulbo. La vía espinotalámica lleva dolor y temperatura, y cruza en la médula. Ambas hacen relevo en el tálamo y terminan en la corteza somatosensorial (giro poscentral), donde se vuelve consciente la sensación.</p>
+</section>
+
+<section id="comparacion">
+<h2>Somático frente a autónomo</h2>
+<div class="scroll"><table>
+<thead><tr><th></th><th>Somático</th><th>Autónomo</th></tr></thead>
+<tbody>
+<tr><td>Control</td><td>Voluntario (y reflejos)</td><td>Involuntario</td></tr>
+<tr><td>Efector</td><td>Músculo esquelético</td><td>Músculo liso, músculo cardíaco y glándulas</td></tr>
+<tr><td>Neuronas del SNC al efector</td><td>Una (motoneurona)</td><td>Dos (preganglionar y posganglionar)</td></tr>
+<tr><td>Ganglio en la vía eferente</td><td>No</td><td>Sí</td></tr>
+<tr><td>Neurotransmisor</td><td>Acetilcolina (receptor nicotínico)</td><td>Acetilcolina y noradrenalina</td></tr>
+<tr><td>Efecto sobre el efector</td><td>Siempre excita</td><td>Excita o inhibe</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="clinica">
+<h2>Cuando falla</h2>
+<ul>
+<li><b>Lesión de motoneurona superior:</b> parálisis espástica, reflejos aumentados y signo de Babinski.</li>
+<li><b>Lesión de motoneurona inferior:</b> parálisis flácida, atrofia muscular, reflejos disminuidos o ausentes y fasciculaciones.</li>
+<li><b>Miastenia gravis:</b> autoanticuerpos atacan los receptores nicotínicos de la unión neuromuscular y producen una debilidad que aumenta con el esfuerzo.</li>
+<li><b>Toxina botulínica:</b> bloquea la liberación de acetilcolina y paraliza el músculo.</li>
+</ul>
+</section>
+
+<section id="juego">
+<h2>Juego: ordena la vía motora</h2>
+<p>Toca las etapas en el orden en que viaja la señal, desde la orden hasta la contracción.</p>
+<div class="chips" id="chips"></div>
+<p id="msg" aria-live="polite"></p>
+<div class="row"><button class="btn alt" type="button" id="again">Reiniciar</button><a class="btn" data-link="juego">Jugar en Genially</a></div>
+</section>
+
+<section id="evaluacion">
+<h2>Evaluación</h2>
+<p>Responde el cuestionario para comprobar qué aprendiste sobre el sistema nervioso somático.</p>
+<a class="btn" data-link="form">Responder cuestionario</a>
+</section>
+
+<footer>
+<p><b>Integrantes:</b> <br>Gerson Heriberto Cubías López <br>Emerson Daniel Pineda Del Cid <br>Carlos José Escalante Barrientos <br>Gerardo Enrique Monterrosa Ama.</p>
+<p><b>Referencias:</b> Tortora, G. y Derrickson, B., <i>Principios de anatomía y fisiología</i>. Hall, J., <i>Guyton y Hall. Tratado de fisiología médica</i>. Purves, D. y cols., <i>Neurociencia</i>.</p>
+</footer>
+</div>
+<script>
+const LINKS={juego:"https://view.genially.com/6ad51a9ce9eec6d1159a4f02",form:"https://docs.google.com/forms/d/e/1FAIpQLSeDiduQp6YfGhIlc4OEUqmJmcGh3vTk-RCE16GoF4oocIBK0g/viewform?usp=publish-editor"};
+const S=[
+["Corteza motora","Las neuronas piramidales de la corteza motora primaria (giro precentral) son las motoneuronas superiores. Allí se genera la orden del movimiento voluntario."],
+["Tracto corticoespinal","Los axones descienden por la cápsula interna y el tronco encefálico. En el bulbo, la mayoría cruza al lado opuesto en la decusación piramidal."],
+["Asta anterior","En la médula, el tracto hace sinapsis con la motoneurona α (motoneurona inferior), cuyo soma está en el asta anterior."],
+["Nervio periférico","El axón, grueso y mielinizado, sale por la raíz ventral y viaja por el nervio espinal. La conducción saltatoria lo hace muy rápido, de hasta unos 120 m/s."],
+["Unión neuromuscular","El potencial de acción abre canales de calcio y libera acetilcolina, que se une a receptores nicotínicos de la placa motora. La acetilcolinesterasa la degrada después."],
+["Fibra muscular","La despolarización viaja por los túbulos T y el retículo sarcoplásmico libera calcio. Actina y miosina forman puentes cruzados y el músculo se contrae."]];
+const path=document.getElementById('path'),det=document.getElementById('det');
+S.forEach((s,i)=>{const b=document.createElement('button');b.type='button';b.setAttribute('aria-pressed','false');b.innerHTML='<span class="dot">'+(i+1)+'</span><small>'+s[0]+'</small>';b.onclick=()=>show(i);path.appendChild(b)});
+function show(i){[...path.children].forEach((b,j)=>b.setAttribute('aria-pressed',String(j===i)));det.innerHTML='<h3>'+(i+1)+'. '+S[i][0]+'</h3><p>'+S[i][1]+'</p>'}
+show(0);
+const chips=document.getElementById('chips'),msg=document.getElementById('msg');let nx=0;
+function start(){nx=0;chips.innerHTML='';msg.textContent='Empieza por donde nace la orden.';
+S.map((s,i)=>i).sort(()=>Math.random()-.5).forEach(i=>{const c=document.createElement('button');c.type='button';c.className='chip';c.textContent=S[i][0];
+c.onclick=()=>{if(c.classList.contains('ok'))return;
+if(i===nx){c.classList.add('ok');c.textContent=(nx+1)+'. '+S[i][0];nx++;msg.textContent=nx===S.length?'¡Completaste la vía motora!':'Correcto. ¿Qué sigue?'}
+else{c.classList.add('bad');setTimeout(()=>c.classList.remove('bad'),400);msg.textContent='Esa etapa todavía no. Piensa dónde está la señal ahora.'}};
+chips.appendChild(c)})}
+document.getElementById('again').onclick=start;start();
+const burger=document.getElementById('burger'),menu=document.getElementById('menu'),scrim=document.getElementById('scrim');
+function setMenu(o){menu.classList.toggle('open',o);scrim.classList.toggle('open',o);burger.setAttribute('aria-expanded',String(o));burger.setAttribute('aria-label',o?'Cerrar menú':'Abrir menú')}
+burger.onclick=()=>setMenu(!menu.classList.contains('open'));
+scrim.onclick=()=>setMenu(false);
+menu.querySelectorAll('a').forEach(a=>a.onclick=()=>setMenu(false));
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&menu.classList.contains('open')){setMenu(false);burger.focus()}});
+document.querySelectorAll('[data-link]').forEach(a=>{const u=LINKS[a.dataset.link];if(u){a.href=u;a.target='_blank';a.rel='noopener'}else{a.setAttribute('aria-disabled','true');a.textContent+=' (enlace pendiente)'}});
+</script>
+</body>
+</html>
